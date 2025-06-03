@@ -1,0 +1,63 @@
+<!-- public/results.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <div><b>_SURVEYS</b></div>
+        <nav>
+        <a href="index.html">FILL OUT SURVEY</a>
+        <a href="results.html">VIEW SURVEY RESULTS</a>
+      </nav>
+  <title>Survey Results</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    
+    
+  </style>
+</head>
+<body>
+  <h1>Survey Results</h1>
+  <!-- ...existing code... -->
+  <div id="results"></div>
+
+  <script>
+  fetch('/results')
+    .then(res => res.json())
+    .then(data => {
+      if (!data.length) {
+        document.getElementById("results").textContent = "No Surveys Available.";
+        return;
+      }
+      let html = `<table>
+        <tr>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th>Date of Birth</th>
+          <th>Contact</th>
+          <th>Food</th>
+          <th>Movies</th>
+          <th>Radio</th>
+          <th>Eat Out</th>
+          <th>TV</th>
+        </tr>`;
+      data.forEach(row => {
+        html += `<tr>
+          <td>${row.fullname || ""}</td>
+          <td>${row.email || ""}</td>
+          <td>${row.dob || ""}</td>
+          <td>${row.contact || ""}</td>
+          <td>${Array.isArray(row.food) ? row.food.join(", ") : row.food || ""}</td>
+          <td>${row.movies ?? ""}</td>
+          <td>${row.radio ?? ""}</td>
+          <td>${row["eat,out"] ?? ""}</td>
+          <td>${row.TV ?? ""}</td>
+        </tr>`;
+      });
+      html += `</table>`;
+      document.getElementById("results").innerHTML = html;
+    })
+    .catch(() => {
+      document.getElementById("results").textContent = "No Surveys Available.";
+    });
+</script>
+</body>
+</html>

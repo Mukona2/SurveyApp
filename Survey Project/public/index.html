@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Survey Form</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div><b>_SURVEYS</b></div>
+      <nav>
+        <a href="index.html">FILL OUT SURVEY</a>
+        <a href="results.html">VIEW SURVEY RESULTS</a>
+      </nav>
+    </header>
+
+    <form id="surveyForm">
+      <h2>Personal Details :</h2>
+      <label for="fullname">Full Names</label>
+      <input type="text" id="fullname" name="fullname" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="dob">Date of Birth</label>
+      <input type="date" id="dob" name="dob" required>
+
+      <label for="contact">Contact Number</label>
+      <input type="tel" id="contact" name="contact" required>
+
+      <div class="food-options">
+        <label>What is your favorite food?</label><br>
+        <label><input type="checkbox" name="food" value="Pizza"> Pizza</label>
+        <label><input type="checkbox" name="food" value="Pasta"> Pasta</label>
+        <label><input type="checkbox" name="food" value="Pap and Wors"> Pap and Wors</label>
+        <label><input type="checkbox" name="food" value="Other"> Other</label>
+      </div>
+
+      <label>Please rate your level of agreement on a scale from 1 to 5:</label>
+      <table class="likert-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Strongly Agree</th>
+            <th>Agree</th>
+            <th>Neutral</th>
+            <th>Disagree</th>
+            <th>Strongly Disagree</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>I like to watch movies</td>
+            <td><input type="radio" name="movies" value="1" required></td>
+            <td><input type="radio" name="movies" value="2"></td>
+            <td><input type="radio" name="movies" value="3"></td>
+            <td><input type="radio" name="movies" value="4"></td>
+            <td><input type="radio" name="movies" value="5"></td>
+          </tr>
+          <tr>
+            <td>I like to listen to radio</td>
+            <td><input type="radio" name="radio" value="1" required></td>
+            <td><input type="radio" name="radio" value="2"></td>
+            <td><input type="radio" name="radio" value="3"></td>
+            <td><input type="radio" name="radio" value="4"></td>
+            <td><input type="radio" name="radio" value="5"></td>
+          </tr>
+          <tr>
+            <td>I like to eat out</td>
+            <td><input type="radio" name="eat,out" value="1" required></td>
+            <td><input type="radio" name="eat,out" value="2"></td>
+            <td><input type="radio" name="eat,out" value="3"></td>
+            <td><input type="radio" name="eat,out" value="4"></td>
+            <td><input type="radio" name="eat,out" value="5"></td>
+          </tr>
+          <tr>
+            <td>I like to watch TV</td>
+            <td><input type="radio" name="TV" value="1" required></td>
+            <td><input type="radio" name="TV" value="2"></td>
+            <td><input type="radio" name="TV" value="3"></td>
+            <td><input type="radio" name="TV" value="4"></td>
+            <td><input type="radio" name="TV" value="5"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button type="submit">SUBMIT</button>
+      <div class="success-message" id="successMessage"></div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("surveyForm").onsubmit = async function(event) {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const data = Object.fromEntries(formData.entries());
+      data.food = formData.getAll('food'); // get all checked foods
+      const response = await fetch('/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (response.ok) {
+        document.getElementById('successMessage').textContent = "Thank you! You have successfully completed the survey.";
+        event.target.reset();
+      } else {
+        document.getElementById('successMessage').textContent = "There was an error submitting your survey. Please try again.";
+      }
+    };
+  </script>
+</body>
+</html>
